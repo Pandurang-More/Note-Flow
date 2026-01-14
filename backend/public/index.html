@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NotionLite - Your Workspace</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <script>
+        // Check authentication BEFORE loading anything
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.replace('/');
+        }
+    </script>
+    
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">N</div>
+                <div class="workspace-name">My Workspace</div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-item active">
+                    <span class="nav-icon">📝</span>
+                    <span>All Pages</span>
+                </div>
+                <div class="nav-item">
+                    <span class="nav-icon">⭐</span>
+                    <span>Favorites</span>
+                </div>
+                <div class="nav-item">
+                    <span class="nav-icon">🗑️</span>
+                    <span>Trash</span>
+                </div>
+            </div>
+
+            <div class="pages-section">
+                <div class="section-title">Pages</div>
+                <div id="pagesList">
+                    <div class="page-item" data-page="welcome">📄 Welcome Page</div>
+                    <div class="page-item" data-page="projects">🚀 Projects</div>
+                    <div class="page-item" data-page="ideas">💡 Ideas</div>
+                </div>
+                <div class="add-page-btn" id="addPageBtn">
+                    <span>+ New Page</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Editor -->
+        <div class="editor-container">
+            <div class="editor-header">
+                <div style="color: #9ca3af; font-size: 14px;">
+                    Last edited just now
+                </div>
+                <div class="editor-actions">
+                    <button class="action-btn">Share</button>
+                    <button class="action-btn primary" id="saveBtn">Save</button>
+                </div>
+            </div>
+
+            <div class="editor-content">
+                <textarea 
+                    class="page-title" 
+                    placeholder="Untitled" 
+                    rows="1"
+                    id="pageTitle"
+                >Welcome to NotionLite</textarea>
+                
+                <div id="blocksContainer">
+                    <div class="block">
+                        <div class="block-menu">⋮</div>
+                        <textarea 
+                            class="block-content" 
+                            placeholder="Start writing or type '/' for commands"
+                            rows="1"
+                        >This is your first block. Click to edit or add more blocks below.</textarea>
+                    </div>
+                </div>
+
+                <div class="add-block" id="addBlockBtn">
+                    <span>+</span>
+                    <span>Click to add a new block</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/script.js"></script>
+</body>
+</html>
