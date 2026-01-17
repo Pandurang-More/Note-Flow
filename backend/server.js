@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/public/login.html');
 });
 
-// Serve main app
+// Serve main app.....
 app.get('/app', (req, res) => {
     res.sendFile(__dirname + '/public/index.html');
 });
