@@ -16,17 +16,17 @@ cache:
 build_app:
   stage: build
   script:
-    - echo "BUILD: Installing dependencies"
+    - echo "BUILD:Installing dependencies"
     - npm install
 
 # -------- TEST --------
 test_app:
   stage: test
   script:
-    - echo "TEST: No automated tests yet, skipping test execution"
+    - echo "TEST:No automated tests yet, skipping test execution"
 
 # -------- DEPLOY --------
 deploy_app:
   stage: deploy
   script:
-    - echo "DEPLOY: Application is ready for deployment"
+    - echo "DEPLOY:Application is ready for deployment"
