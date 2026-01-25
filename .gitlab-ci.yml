@@ -12,21 +12,21 @@ cache:
   paths:
     - Full-Stack/node_modules/
 
-# ---------- BUILD ----------
+# -------- BUILD --------
 build_app:
   stage: build
   script:
     - echo "BUILD: Installing dependencies"
     - npm install
 
-# ---------- TEST ----------
+# -------- TEST --------
 test_app:
   stage: test
   script:
-    - echo "TEST: No automated tests yet, application structure verified"
+    - echo "TEST: No automated tests yet, skipping test execution"
 
-# ---------- DEPLOY ----------
+# -------- DEPLOY --------
 deploy_app:
   stage: deploy
   script:
-    - echo "DEPLOY: Application ready for deployment (manual hosting later)"
+    - echo "DEPLOY: Application is ready for deployment"
