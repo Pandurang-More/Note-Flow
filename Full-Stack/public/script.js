@@ -420,13 +420,16 @@ saveBtn.addEventListener('click', async () => {
 });
 
 // Logout functionality
-document.querySelector('.workspace-name').addEventListener('dblclick', () => {
-    if (confirm('Do you want to logout?')) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        window.location.href = '/';
-    }
-});
+const logoutBtn = document.getElementById('logoutBtn');
+if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+        if (confirm('Are you sure you want to logout?')) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/';
+        }
+    });
+}
 
 console.log('NotionLite connected to backend!');
 
