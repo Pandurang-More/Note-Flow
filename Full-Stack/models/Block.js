@@ -16,6 +16,7 @@ const blockSchema = new mongoose.Schema({
     },
     type: {
         type: String,
+        enum: ['text', 'heading1', 'heading2', 'heading3', 'bullet', 'numbered', 'quote'],
         default: 'text'
     },
     createdAt: {

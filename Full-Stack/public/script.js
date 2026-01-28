@@ -17,19 +17,61 @@ const pageTitle = document.getElementById('pageTitle');
 // Load pages on startup
 loadPages();
 
-// Create a new block
-function createBlock(content = '', blockId = null) {
+// Create a new block with type selector
+function createBlock(content = '', blockId = null, blockType = 'text') {
     const block = document.createElement('div');
     block.className = 'block';
     block.dataset.blockId = blockId;
+    block.dataset.blockType = blockType;
+    
+    // Different styles based on block type
+    let placeholder = 'Type \'/\' for commands';
+    let inputClass = 'block-content';
+    
+    if (blockType === 'heading1') {
+        inputClass = 'block-content heading1';
+        placeholder = 'Heading 1';
+    } else if (blockType === 'heading2') {
+        inputClass = 'block-content heading2';
+        placeholder = 'Heading 2';
+    } else if (blockType === 'heading3') {
+        inputClass = 'block-content heading3';
+        placeholder = 'Heading 3';
+    } else if (blockType === 'bullet') {
+        inputClass = 'block-content bullet-list';
+        placeholder = 'List item';
+    } else if (blockType === 'numbered') {
+        inputClass = 'block-content numbered-list';
+        placeholder = 'List item';
+    } else if (blockType === 'quote') {
+        inputClass = 'block-content quote';
+        placeholder = 'Quote';
+    }
+    
     block.innerHTML = `
-        <div class="block-menu">⋮</div>
+        <div class="block-handle">
+            <div class="block-menu" title="Drag to reorder">⋮⋮</div>
+            <select class="block-type-selector">
+                <option value="text" ${blockType === 'text' ? 'selected' : ''}>Text</option>
+                <option value="heading1" ${blockType === 'heading1' ? 'selected' : ''}>Heading 1</option>
+                <option value="heading2" ${blockType === 'heading2' ? 'selected' : ''}>Heading 2</option>
+                <option value="heading3" ${blockType === 'heading3' ? 'selected' : ''}>Heading 3</option>
+                <option value="bullet" ${blockType === 'bullet' ? 'selected' : ''}>• Bullet List</option>
+                <option value="numbered" ${blockType === 'numbered' ? 'selected' : ''}>1. Numbered List</option>
+                <option value="quote" ${blockType === 'quote' ? 'selected' : ''}>❝ Quote</option>
+            </select>
+        </div>
+        <div class="block-content-wrapper">
+            ${blockType === 'bullet' ? '<span class="bullet-icon">•</span>' : ''}
+            ${blockType === 'numbered' ? '<span class="number-icon">1.</span>' : ''}
+            ${blockType === 'quote' ? '<span class="quote-icon">❝</span>' : ''}
+            <textarea 
+                class="${inputClass}" 
+                placeholder="${placeholder}"
+                rows="1"
+            >${content}</textarea>
+        </div>
         <div class="block-delete" title="Delete block">🗑️</div>
-        <textarea 
-            class="block-content" 
-            placeholder="Start writing or type '/' for commands"
-            rows="1"
-        >${content}</textarea>
     `;
     
     // Auto-resize textarea
@@ -37,6 +79,24 @@ function createBlock(content = '', blockId = null) {
     textarea.addEventListener('input', function() {
         this.style.height = 'auto';
         this.style.height = this.scrollHeight + 'px';
+    });
+    
+    // Change block type
+    const typeSelector = block.querySelector('.block-type-selector');
+    typeSelector.addEventListener('change', async (e) => {
+        const newType = e.target.value;
+        const currentContent = textarea.value;
+        const blockId = block.dataset.blockId;
+        
+        // Replace block with new type
+        const newBlock = createBlock(currentContent, blockId, newType);
+        block.replaceWith(newBlock);
+        
+        // Auto-resize the new textarea
+        const newTextarea = newBlock.querySelector('textarea');
+        newTextarea.style.height = 'auto';
+        newTextarea.style.height = newTextarea.scrollHeight + 'px';
+        newTextarea.focus();
     });
     
     // Delete block functionality
@@ -382,27 +442,29 @@ saveBtn.addEventListener('click', async () => {
             })
         });
 
-        // Update all blocks
-        const blocks = blocksContainer.querySelectorAll('.block');
-        for (let i = 0; i < blocks.length; i++) {
-            const block = blocks[i];
-            const blockId = block.dataset.blockId;
-            const content = block.querySelector('.block-content').value;
+      // Update all blocks
+const blocks = blocksContainer.querySelectorAll('.block');
+for (let i = 0; i < blocks.length; i++) {
+    const block = blocks[i];
+    const blockId = block.dataset.blockId;
+    const blockType = block.dataset.blockType || 'text';
+    const content = block.querySelector('.block-content').value;
 
-            if (blockId && blockId !== 'null') {
-                await fetch(`${API_URL}/blocks/${blockId}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'x-auth-token': currentToken
-                    },
-                    body: JSON.stringify({
-                        content: content,
-                        order: i
-                    })
-                });
-            }
-        }
+    if (blockId && blockId !== 'null') {
+        await fetch(`${API_URL}/blocks/${blockId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-auth-token': currentToken
+            },
+            body: JSON.stringify({
+                content: content,
+                type: blockType,
+                order: i
+            })
+        });
+    }
+}
 
         // Show success
         saveBtn.textContent = 'Saved ✓';
